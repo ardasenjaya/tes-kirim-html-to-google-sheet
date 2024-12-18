@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kirim Data ke Spreadsheet</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 50px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+    }
+    label {
+      margin-bottom: 5px;
+    }
+    input, textarea {
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px;
+      font-size: 16px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <h1>Kirim Data ke Spreadsheet</h1>
+  <form id="data-form">
+    <label for="name">Nama:</label>
+    <input type="text" id="name" name="name" required>
+    
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    
+    <label for="message">Pesan:</label>
+    <textarea id="message" name="message" rows="4" required></textarea>
+    
+    <button type="submit">Kirim</button>
+  </form>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxGozKvF34It1Yt4hVQtVukDCT7S_2-OYh5EBd0cjs1KBVBgRRyfosDwnGUZPBlQRCRWQ/exec'; // URL Web App Anda
+    const form = document.getElementById('data-form');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        alert("Data berhasil dikirim!");
+        form.reset();
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert("Terjadi kesalahan, coba lagi.");
+      });
+    });
+  </script>
+</body>
+</html>
