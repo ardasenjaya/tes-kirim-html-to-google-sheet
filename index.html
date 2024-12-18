@@ -39,13 +39,13 @@
   <h1>Kirim Data ke Spreadsheet</h1>
   <form id="data-form">
     <label for="name">Nama:</label>
-    <input type="text" id="name" name="name" required>
+    <input type="text" id="name" name="Nama" required>
     
     <label for="email">Email:</label>
-    <input type="email" id="email" name="email" required>
+    <input type="email" id="email" name="Email" required>
     
     <label for="message">Pesan:</label>
-    <textarea id="message" name="message" rows="4" required></textarea>
+    <textarea id="message" name="Pesan" rows="4" required></textarea>
 
     <label for="phone">Nomor HP:</label>
     <input type="text" id="phone" name="Nomor HP" required>
@@ -71,7 +71,7 @@
   },
 })
 .then(() => {
-  alert("Data berhasil dikirim! (mode no-cors)");
+  alert("Data berhasil dikirim!");
   form.reset();
 })
 .catch(error => {
