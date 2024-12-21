@@ -29,10 +29,43 @@
       color: white;
       border: none;
       cursor: pointer;
+      border-radius: 5px;
+      overflow: hidden;
     }
     button:hover {
       background-color: #45a049;
     }
+
+    .loading-spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+    @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        button.loading .loading-spinner {
+            display: block;
+        }
+
+        button.loading span {
+            visibility: hidden;
+        }
   </style>
 </head>
 <body>
@@ -50,37 +83,50 @@
   <label for="phone">Nomor HP:</label>
   <input type="text" id="phone" name="Nomor HP" required>
   
-  <button type="submit">Kirim</button>
+  <button type="submit">
+    <span>Kirim</span>
+  <div class="loading-spinner"></div>
+  </button>
 </form>
 
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxGozKvF34It1Yt4hVQtVukDCT7S_2-OYh5EBd0cjs1KBVBgRRyfosDwnGUZPBlQRCRWQ/exec'; // URL Web App Anda
-    const form = document.getElementById('data-form');
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxGozKvF34It1Yt4hVQtVukDCT7S_2-OYh5EBd0cjs1KBVBgRRyfosDwnGUZPBlQRCRWQ/exec'; // URL Web App Anda
+        const form = document.getElementById('data-form');
+        const submitButton = form.querySelector('button');
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+        form.addEventListener('submit', e => {
+            e.preventDefault();
 
-      fetch(scriptURL, {
-  method: 'POST',
-  mode: 'no-cors', // Tambahkan mode ini untuk menghindari CORS
-  body: JSON.stringify(data),
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
-.then(() => {
-  alert("Data berhasil dikirim!");
-  form.reset();
-})
-.catch(error => {
-  console.error('Error:', error);
-  alert("Terjadi kesalahan, coba lagi.");
-});
+            // Tampilkan animasi loading dan nonaktifkan tombol
+            submitButton.classList.add('loading');
+            submitButton.disabled = true;
 
-    });
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+                .then(() => {
+                    alert("Data berhasil dikirim!");
+                    form.reset();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("Terjadi kesalahan, coba lagi.");
+                })
+                .finally(() => {
+                    // Hapus animasi loading dan aktifkan kembali tombol
+                    submitButton.classList.remove('loading');
+                    submitButton.disabled = false;
+                });
+        });
   </script>
 </body>
 </html>
